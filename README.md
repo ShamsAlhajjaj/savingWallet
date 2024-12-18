@@ -1,5 +1,5 @@
 
-# Saving Walllet
+# Saving Wallet
 
 This is a Laravel 11 project that allows users to manage their transactions, wallets, and categories. Users can add income and expense transactions, view their wallet balance, and the admin can manage users and see their financial statistics.
 
