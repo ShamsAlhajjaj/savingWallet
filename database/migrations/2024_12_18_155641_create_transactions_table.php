@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['income', 'expense']);
-            $table->decimal('amount', 10, 2);
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            $table->foreignId('wallet_id')->nullable()->constrained('wallets')->onDelete('set null');
+            $table->decimal('amount', 15, 2);
             $table->text('note')->nullable();
             $table->timestamps();
         });

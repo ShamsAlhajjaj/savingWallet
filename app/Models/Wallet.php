@@ -9,10 +9,17 @@ class Wallet extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'balance', 'total_income', 'total_expense'];
+    protected $fillable = [
+        'user_id', 'balance',
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

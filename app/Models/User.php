@@ -6,7 +6,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Role;
 
 class User extends Authenticatable
 {
@@ -19,13 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'birthdate',
-        'password',
-        'image',
-        'role_id',
+        'name', 'email', 'password', 'phone', 'birthdate', 'role', 'image',
     ];
 
     /**
@@ -51,23 +44,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function role()
+    public function wallet()
     {
-        return $this->belongsTo(Role::class);
+        return $this->hasOne(wallet::class);
     }
 
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    public function wallet()
-    {
-        return $this->hasOne(Wallet::class);
-    }
-
-    public function categories()
-    {
-        return $this->hasMany(Category::class);
     }
 }

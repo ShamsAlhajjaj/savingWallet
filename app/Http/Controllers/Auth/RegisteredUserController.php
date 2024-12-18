@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Wallet; // Import Wallet model
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,31 +31,40 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'min:8', 'regex:/[a-zA-Z]/', 'regex:/[0-9]/', 'confirmed'],
-            'phone' => ['required', 'string', 'max:20', 'unique:users'],
-            'birthdate' => ['nullable', 'date'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|min:10|unique:users',
+            'birthdate' => 'nullable|date',
+            'password' => 'required|string|min:8|confirmed',
+            'image' => 'required|image|max:5120', // Ensure image validation
         ]);
 
-        $imagePath = $request->file('image')->store('user-images', 'public');
-        $roleId = 2;
+        // Store the uploaded user image in the 'public/images' directory
+        $imagePath = $request->file('image')->store('images', 'public');
 
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'birthdate' => $request->birthdate,
+            'password' => Hash::make($request->password),
             'image' => $imagePath,
-            'role_id' => $roleId,
         ]);
 
+        // Automatically create a wallet for the user with an initial balance of 0
+        Wallet::create([
+            'user_id' => $user->id,
+            'balance' => 0, // Default initial balance
+        ]);
+
+        // Fire the registered event
         event(new Registered($user));
 
+        // Log in the newly registered user
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect to the user's dashboard or any other intended route
+        return redirect(route('dashboard'));
     }
 }

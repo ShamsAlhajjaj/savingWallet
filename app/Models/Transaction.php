@@ -9,13 +9,18 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'category_id', 'type', 'amount', 'note'];
+    protected $fillable = ['user_id', 'wallet_id', 'type', 'category_id', 'amount', 'note'];
+
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
+    
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);

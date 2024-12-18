@@ -1,60 +1,88 @@
-<x-guest-layout>
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h2>Register</h2>
+
+    <!-- Display All Validation Errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
-        <!-- Name -->
+        <!-- Name Field -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" value="{{ old('name') }}" required>
+            @error('name')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Email -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <!-- Email Field -->
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" value="{{ old('email') }}" required>
+            @error('email')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Phone -->
-        <div class="mt-4">
-            <x-input-label for="phone" :value="__('Phone Number')" />
-            <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required />
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+        <!-- Phone Field -->
+        <div>
+            <label for="phone">Phone:</label>
+            <input type="text" name="phone" id="phone" value="{{ old('phone') }}" required>
+            @error('phone')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Birthdate -->
-        <div class="mt-4">
-            <x-input-label for="birthdate" :value="__('Birthdate')" />
-            <x-text-input id="birthdate" class="block mt-1 w-full" type="date" name="birthdate" :value="old('birthdate')" />
-            <x-input-error :messages="$errors->get('birthdate')" class="mt-2" />
+        <!-- Birthdate Field -->
+        <div>
+            <label for="birthdate">Birthdate:</label>
+            <input type="date" name="birthdate" id="birthdate" value="{{ old('birthdate') }}">
+            @error('birthdate')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <!-- Password Field -->
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            @error('password')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Password Confirmation -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <!-- Password Confirmation Field -->
+        <div>
+            <label for="password_confirmation">Confirm Password:</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" required>
+            @error('password_confirmation')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- User Image -->
-        <div class="mt-4">
-            <x-input-label for="image" :value="__('User Image')" />
-            <input id="image" class="block mt-1 w-full" type="file" name="image" required />
-            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+        <!-- Image Field -->
+        <div>
+            <label for="image">User Image:</label>
+            <input type="file" name="image" id="image" required>
+            @error('image')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <!-- Submit Button -->
+        <button type="submit">Register</button>
     </form>
-</x-guest-layout>
+</div>
+@endsection

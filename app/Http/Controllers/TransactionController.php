@@ -4,89 +4,61 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-
+        $wallet = Auth::user()->wallet;
+        $transactions = Auth::user()->transactions()->with('category')->get();
+        $totalIncome = $transactions->where('type', 'income')->sum('amount');
+        $totalExpense = $transactions->where('type', 'expense')->sum('amount');
+        $categories = Category::all();
+        return view('transactions.index', compact('transactions', 'wallet', 'totalIncome', 'totalExpense', 'categories'));
     }
+    
+    
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $categories = Category::all()->groupBy('type');
-
-        // Pass categories to the view
         return view('transactions.create', compact('categories'));
     }
+    
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validate the incoming request
         $request->validate([
-            'category_id' => 'required|numeric',
+            'type' => 'required|in:income,expense',
+            'category_id' => 'required|exists:categories,id',
             'amount' => 'required|numeric|min:0.01',
-            'note' => 'nullable|string|max:500',
-            'type' => 'required|string|in:income,expense',
+            'note' => 'nullable|string',
         ]);
 
-        $category_id = $request->input('category_id');
-        $amount = $request->input('amount');
-        $type = $request->input('type');
-        $note = $request->input('note', '');//empty if no note
+        $wallet = Auth::user()->wallet;
 
-        $transaction = new Transaction();
-        $transaction->category_id = $category_id;
-        $transaction->amount = $amount;
-        $transaction->type = $type;
-        $transaction->note = $note;
-        $transaction->user_id = Auth::id();
+        if ($request->type == 'expense' && $request->amount > $wallet->balance) {
+            return back()->withErrors(['amount' => 'Expense amount exceeds wallet balance.']);
+        }
 
-        $transaction->save();
+        // Create transaction
+        Transaction::create([
+            'user_id' => Auth::id(),
+            'wallet_id' => $wallet->id,
+            'type' => $request->type,
+            'category_id' => $request->category_id,
+            'amount' => $request->amount,
+            'note' => $request->note,
+        ]);
 
-        return redirect()->route('transaction.create')->with('success', 'Transaction added successfully!');
-    }
+        // Update wallet balance
+        $wallet->balance += $request->type == 'income' ? $request->amount : -$request->amount;
+        $wallet->save();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Transaction $transaction)
-    {
-        //
+        return redirect()->route('transactions.index')->with('success', 'Transaction added successfully.');
     }
 }
+
