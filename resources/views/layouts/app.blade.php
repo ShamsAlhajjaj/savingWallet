@@ -20,7 +20,7 @@
                 <ul class="navbar-nav ms-auto">
                     @if(Auth::user()->role === 'admin')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin') }}">Users list</a>
+                            <a class="nav-link" href="{{ route('admin') }}">Admin Dashboard</a>
                         </li>
                     @endif
                     @guest
@@ -76,5 +76,6 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('scripts')
 </body>
 </html>
