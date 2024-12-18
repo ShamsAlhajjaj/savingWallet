@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -12,7 +14,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -20,7 +22,10 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all()->groupBy('type');
+
+        // Pass categories to the view
+        return view('transactions.create', compact('categories'));
     }
 
     /**
@@ -28,7 +33,29 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the incoming request
+        $request->validate([
+            'category_id' => 'required|numeric',
+            'amount' => 'required|numeric|min:0.01',
+            'note' => 'nullable|string|max:500',
+            'type' => 'required|string|in:income,expense',
+        ]);
+
+        $category_id = $request->input('category_id');
+        $amount = $request->input('amount');
+        $type = $request->input('type');
+        $note = $request->input('note', '');//empty if no note
+
+        $transaction = new Transaction();
+        $transaction->category_id = $category_id;
+        $transaction->amount = $amount;
+        $transaction->type = $type;
+        $transaction->note = $note;
+        $transaction->user_id = Auth::id();
+
+        $transaction->save();
+
+        return redirect()->route('transaction.create')->with('success', 'Transaction added successfully!');
     }
 
     /**

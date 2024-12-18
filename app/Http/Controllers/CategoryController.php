@@ -28,7 +28,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the incoming request
+        $request->validate([
+            'category_name' => 'required|string|max:255|unique:categories,name',
+            'category_type' => 'required|in:Income,Expense',
+        ]);
+
+        // Create new category
+        $category = new Category();
+        $category->name = $request->category_name;
+        $category->type = $request->category_type;
+        $category->save();
+
+        // Redirect back with success message
+        return back()->with('success', 'Category added successfully!');
     }
 
     /**
