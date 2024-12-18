@@ -36,11 +36,16 @@ class RegisteredUserController extends Controller
             'phone' => 'required|string|min:10|unique:users',
             'birthdate' => 'nullable|date',
             'password' => 'required|string|min:8|confirmed',
-            'image' => 'required|image|max:5120', // Ensure image validation
+            'image' => 'required|image|max:5120|mimes:jpeg,png,jpg,gif',
         ]);
-
-        // Store the uploaded user image in the 'public/images' directory
-        $imagePath = $request->file('image')->store('images', 'public');
+        $imagePath = public_path('images');
+        if (!file_exists($imagePath)) {
+            mkdir($imagePath, 0755, true);
+        }
+        if ($request->file('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move($imagePath, $imageName);
+        }
 
         // Create the user
         $user = User::create([
@@ -49,7 +54,7 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'birthdate' => $request->birthdate,
             'password' => Hash::make($request->password),
-            'image' => $imagePath,
+            'image' => $imageName,
         ]);
 
         // Automatically create a wallet for the user with an initial balance of 0

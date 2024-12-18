@@ -35,11 +35,23 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('transactions.create') }}">Add Transaction</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img 
+                                    src="{{ Auth::user()->image ? asset('images/' . Auth::user()->image) : asset('images/default-user.webp') }}" 
+                                    alt="{{ Auth::user()->name }}" 
+                                    class="rounded-circle" 
+                                    style="width: 30px; height: 30px; object-fit: cover;">
+                                <strong>{{ Auth::user()->name }}</strong>
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
