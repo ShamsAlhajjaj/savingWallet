@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone')->unique();
+            $table->date('birthdate')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('image');
+            $table->foreignId('role_id')->default(2)->constrained('roles')->cascadeOnDelete(); // default "user"
             $table->timestamps();
         });
 
