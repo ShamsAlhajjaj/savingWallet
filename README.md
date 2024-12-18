@@ -33,8 +33,8 @@ This is a Laravel 11 project that allows users to manage their transactions, wal
 Clone the project repository to your local machine.
 
 ```bash
-git clone https://github.com/your-username/your-project-name.git
-cd your-project-name
+git clone https://github.com/ShamsAlhajjaj/savingWallet.git
+cd savingWallet
 ```
 
 ### Step 2: Install dependencies
@@ -109,47 +109,33 @@ The application should now be accessible at `http://127.0.0.1:8000`.
 
 ## Routes
 
-- **Home**: `/` - Displays the user's wallet and transactions.
-- **Transactions**: `/transactions` - Adds, views, and lists transactions.
-- **Admin**: `/admin` - Admin page showing a list of users with total expenses, income, and wallet balance.
+### Public Routes
+- **Home**: `/` - The welcome page (can be customized to show a landing page).
+  
+### Authenticated User Routes
+- **Dashboard**: `/dashboard` - Displays the user's dashboard (accessible only by authenticated users).
 
+#### Profile Routes
+- **Profile Edit**: `/profile` - View and edit the user's profile.
+- **Profile Update**: `/profile` (PATCH) - Update the user's profile information.
+- **Profile Delete**: `/profile` (DELETE) - Delete the user's profile.
+
+#### Transaction Routes
+- **View Transactions**: `/transactions` - Display the list of user transactions.
+- **Create Transaction**: `/transactions/create` - Display the form to add a new transaction.
+- **Store Transaction**: `/transactions` (POST) - Store a new transaction in the database.
+
+#### Category Routes
+- **Create Category**: `/categories/create` - Display the form to add a new category.
+- **Store Category**: `/categories` (POST) - Store a new category in the database.
+
+### Admin Routes
+- **Admin Page**: `/admin` - Accessible only by users with the admin role. Displays a list of registered users and financial data.
+  
 ### Middleware
+- **auth**: Protects routes so they can only be accessed by authenticated users (e.g., `/dashboard`, `/transactions`).
+- **admin**: Restricts access to the admin page to users with the `admin` role (e.g., `/admin`).
 
-- `auth`: Ensures that routes are only accessible to authenticated users.
-- `admin`: Restricts access to certain routes for admin users only.
-
-## Admin Page
-
-The admin can view a table of all registered users, including the following columns:
-
-- Name
-- Email
-- Phone
-- Birthdate
-- Total Expenses
-- Total Income
-- Wallet Balance
-- Registered Date
-
-## Admin Middleware
-
-The `AdminMiddleware` ensures that only users with the role `admin` can access admin pages. Users without this role will be redirected to the home page.
-
-## Custom Categories
-
-Users can choose from predefined categories or create their own categories for transactions. The available categories depend on whether the transaction is an income or expense.
-
-## Testing
-
-Run the tests using:
-
-```bash
-php artisan test
-```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Acknowledgements
 
