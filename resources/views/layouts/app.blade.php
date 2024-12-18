@@ -18,6 +18,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    @if(Auth::user()->role === 'admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin') }}">Users list</a>
+                        </li>
+                    @endif
                     @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
@@ -26,9 +31,6 @@
                             <a class="nav-link" href="{{ route('register') }}">Register</a>
                         </li>
                     @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('transactions.index') }}">Transactions</a>
                         </li>
@@ -46,11 +48,15 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li>
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
                                 </li>
+                                
                             </ul>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf

@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::middleware(AdminMiddleware::class)->get('/admin', [AdminController::class, 'index'])->name('admin.page');
+Route::middleware(AdminMiddleware::class)->get('/admin', [AdminController::class, 'index'])->name('admin');
 
 
 require __DIR__.'/auth.php';
