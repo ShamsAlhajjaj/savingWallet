@@ -1,5 +1,5 @@
 
-# Laravel Transaction Management System
+# Saving Walllet
 
 This is a Laravel 11 project that allows users to manage their transactions, wallets, and categories. Users can add income and expense transactions, view their wallet balance, and the admin can manage users and see their financial statistics.
 
@@ -8,7 +8,7 @@ This is a Laravel 11 project that allows users to manage their transactions, wal
 - **User Authentication**: Login and Registration using Laravel Breeze.
 - **Transaction Management**: Users can add transactions with categories (Income and Expense).
 - **Wallet Management**: Displays wallet balance, total income, and total expenses.
-- **Admin Panel**: Admin users can view a list of registered users and their financial details.
+- **Admin Dashboard**: Admin users can view a list of registered users and their financial details, and show interactive charts of statistics.
 - **Category Management**: Predefined and custom categories for income and expenses.
 
 ## Technologies Used
